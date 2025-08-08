@@ -2,82 +2,51 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>Tweet Translator</title>
+  <title>Simple Tweet Translator</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      max-width: 400px;
-      margin: auto;
-      background: #f4f4f4;
-    }
-    textarea, select, button {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      font-size: 16px;
-      box-sizing: border-box;
-    }
-    button {
-      background-color: #1da1f2;
-      border: none;
-      color: white;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #0d8ddb;
-    }
-    #output {
-      background: white;
-      padding: 15px;
-      border: 1px solid #ccc;
-      min-height: 50px;
-      margin-top: 10px;
-      white-space: pre-wrap;
-    }
+    body { font-family: Arial; max-width: 400px; margin: auto; padding: 20px; }
+    textarea, select, button { width: 100%; margin: 10px 0; padding: 10px; font-size: 16px; }
+    #output { background: #eee; padding: 15px; min-height: 50px; white-space: pre-wrap; }
   </style>
 </head>
 <body>
   <h2>Tweet Translator</h2>
-  <textarea id="tweetInput" placeholder="Paste tweet text here"></textarea>
-  <select id="langSelect">
+  <textarea id="input" placeholder="Enter text to translate"></textarea>
+  <select id="lang">
     <option value="hi">Hindi</option>
     <option value="ml">Malayalam</option>
     <option value="en">English</option>
-    <option value="ta">Tamil</option>
-    <option value="te">Telugu</option>
-    <option value="fr">French</option>
     <option value="es">Spanish</option>
   </select>
-  <button id="translateBtn">Translate</button>
-  <div id="output">Translated tweet will appear here.</div>
+  <button id="translate">Translate</button>
+  <div id="output">Translation appears here</div>
 
   <script>
-    document.getElementById('translateBtn').addEventListener('click', async () => {
-      const text = document.getElementById('tweetInput').value.trim();
-      const target = document.getElementById('langSelect').value;
+    document.getElementById('translate').onclick = async function () {
+      const text = document.getElementById('input').value.trim();
+      const target = document.getElementById('lang').value;
       const output = document.getElementById('output');
 
       if (!text) {
-        output.textContent = 'Please enter tweet text.';
+        output.textContent = "Please enter some text.";
         return;
       }
 
-      output.textContent = 'Translating...';
+      output.textContent = "Translating...";
 
       try {
-        const res = await fetch('https://api.mymemory.translated.net/get?q=' + encodeURIComponent(text) + '&langpair=en|' + target);
-        const data = await res.json();
+        const response = await fetch('https://api.mymemory.translated.net/get?q=' + encodeURIComponent(text) + '&langpair=en|' + target);
+        const data = await response.json();
 
         if (data.responseData && data.responseData.translatedText) {
           output.textContent = data.responseData.translatedText;
         } else {
-          output.textContent = 'Translation failed.';
+          output.textContent = "Translation failed.";
         }
-      } catch (e) {
-        output.textContent = 'Error translating tweet.';
+      } catch (err) {
+        output.textContent = "Error during translation.";
       }
-    });
+    }
   </script>
 </body>
 </html>
