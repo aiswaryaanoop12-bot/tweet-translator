@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tweet Translator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        textarea, select, button {
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: white;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Tweet Translator</h2>
+<textarea id="tweet" placeholder="Enter tweet here"></textarea>
+
+<select id="language">
+    <option value="hi">Hindi</option>
+    <option value="ml">Malayalam</option>
+    <option value="ta">Tamil</option>
+    <option value="te">Telugu</option>
+    <option value="en">English</option>
+</select>
+
+<button onclick="translateTweet()">Translate</button>
+
+<div id="result">Translated Tweet will appear here</div>
+
+<script>
+function translateTweet() {
+    let tweet = document.getElementById("tweet").value;
+    let lang = document.getElementById("language").value;
+
+    fetch("https://libretranslate.de/translate", {
+        method: "POST",
+        body: JSON.stringify({
+            q: tweet,
+            source: "auto",
+            target: lang,
+            format: "text"
+        }),
+        headers: { "Content-Type": "application/json" }
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("result").innerText = "Translated Tweet: " + data.translatedText;
+    })
+    .catch(err => {
+        document.getElementById("result").innerText = "Error: " + err;
+    });
+}
+</script>
+
+</body>
+</html>
